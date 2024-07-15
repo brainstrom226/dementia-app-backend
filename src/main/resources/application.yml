@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: dementia-backend
+server:
+  servlet:
+    context-path: /dementia-app
