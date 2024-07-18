@@ -1,15 +1,18 @@
 package com.db.dementia.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
 public class User {
-    private String name;
+    @NonNull
+    private String uid;
+    @NonNull
     private String email;
+    @NonNull
+    private String password;
+    @NonNull
+    private Role role;
 }
