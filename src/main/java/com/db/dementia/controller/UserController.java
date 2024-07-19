@@ -1,6 +1,7 @@
 package com.db.dementia.controller;
 
 import com.db.dementia.dto.EmergencyContact;
+import com.db.dementia.dto.UploadResponse;
 import com.db.dementia.dto.User;
 import com.db.dementia.service.DatabaseContextPath;
 import com.db.dementia.service.FirebaseService;
@@ -54,5 +55,12 @@ public class UserController {
     public void deleteEmergencyContact(@PathVariable("userId") final String userId,
                                        @PathVariable("contactId") final String contactId) {
         firebaseService.deleteData(String.format(DatabaseContextPath.EMERGENCY_CONTACT_NODE, userId, contactId));
+    }
+
+    @GetMapping("/gallery/{userId}")
+    public ResponseEntity<UploadResponse> getUploadedGallery(@PathVariable("userId") final String userId)
+            throws ExecutionException, InterruptedException {
+        return ResponseEntity.ok(firebaseService.getUploadResponse(
+                String.format(DatabaseContextPath.GALLERY_USER_NODE, userId), userId));
     }
 }

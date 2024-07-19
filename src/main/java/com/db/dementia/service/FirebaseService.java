@@ -12,7 +12,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @DependsOn("firebaseApp")
@@ -126,5 +125,24 @@ public class FirebaseService {
         });
 
         return futureFileNames.get();
+    }
+
+    public UploadResponse getUploadResponse(final String key, final String user)
+            throws ExecutionException, InterruptedException {
+        final CompletableFuture<Set<String>> futureFileNames = new CompletableFuture<>();
+        final Set<String> fileNames = new HashSet<>();
+        databaseReference.child(key).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                dataSnapshot.getChildren().forEach(child -> fileNames.add(child.getValue().toString()));
+                futureFileNames.complete(fileNames);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("Transaction failed with " + databaseError.getMessage());
+            }
+        });
+        return new UploadResponse(user, futureFileNames.get());
     }
 }
