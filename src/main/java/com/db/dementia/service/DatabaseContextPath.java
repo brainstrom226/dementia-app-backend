@@ -9,4 +9,7 @@ public final class DatabaseContextPath {
     public static final String EMERGENCY_CONTACT_NODE = EMERGENCY_CONTACT_USER_NODE + "/%s";
 
     public static final String GALLERY_USER_NODE = "/gallery/%s/files";
+
+    public static final String EVENTS_USER_NODE = "/events/%s";
+    public static final String EVENTS_NODE = EVENTS_USER_NODE + "/%s";
 }
