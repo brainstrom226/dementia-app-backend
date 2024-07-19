@@ -47,6 +47,8 @@ public class FirebaseService {
             public Transaction.Result doTransaction(MutableData mutableData) {
 
                 values.forEach(value -> {
+                    value.setId(null);
+                    value.setUserId(null);
                     final DatabaseReference newContactRef = databaseRef.push();
                     mutableData.child(newContactRef.getKey()).setValue(value);
                 });
