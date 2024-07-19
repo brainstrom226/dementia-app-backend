@@ -35,6 +35,14 @@ public class UserController {
                 String.format(DatabaseContextPath.EMERGENCY_CONTACT_USER_NODE, userId), emergencyContact));
     }
 
+    @PutMapping("/emergency-contact/{userId}/{contactId}")
+    public void updateEmergencyContact(@PathVariable("userId") final String userId,
+                                       @PathVariable("contactId") final String contactId,
+                                       @RequestBody EmergencyContact emergencyContact) {
+        firebaseService.saveData(
+                String.format(DatabaseContextPath.EMERGENCY_CONTACT_NODE, userId, contactId), emergencyContact);
+    }
+
     @GetMapping("/emergency-contact/{userId}")
     public ResponseEntity<Set<EmergencyContact>> getEmergencyContact(@PathVariable("userId") final String userId)
             throws ExecutionException, InterruptedException {

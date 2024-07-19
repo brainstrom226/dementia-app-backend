@@ -36,7 +36,8 @@ public class FirebaseService {
         });
     }
 
-    public Set<EmergencyContact> saveEmergencyContact(final String key, final Set<EmergencyContact> values) throws ExecutionException, InterruptedException {
+    public Set<EmergencyContact> saveEmergencyContact(final String key, final Set<EmergencyContact> values)
+            throws ExecutionException, InterruptedException {
         final CompletableFuture<Set<EmergencyContact>> futureContacts = new CompletableFuture<>();
         final Set<EmergencyContact> emergencyContacts = new HashSet<>();
         final DatabaseReference databaseRef = databaseReference.child(key);
