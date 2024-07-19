@@ -1,6 +1,7 @@
 package com.db.dementia.service;
 
 import com.db.dementia.dto.EmergencyContact;
+import com.db.dementia.dto.UploadResponse;
 import com.google.firebase.database.*;
 import com.google.gson.Gson;
 import org.springframework.context.annotation.DependsOn;
@@ -11,6 +12,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @DependsOn("firebaseApp")
@@ -96,5 +98,33 @@ public class FirebaseService {
             }
         });
         return futureContacts.get();
+    }
+
+    public Set<String> saveUploadResponse(final String key, final String fileName)
+            throws ExecutionException, InterruptedException {
+        final CompletableFuture<Set<String>> futureFileNames = new CompletableFuture<>();
+        final Set<String> fileNames = new HashSet<>();
+        final DatabaseReference databaseRef = databaseReference.child(key);
+
+        databaseRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                final DatabaseReference uploadRef = databaseRef.push();
+                mutableData.child(uploadRef.getKey()).setValue(fileName);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                if (Objects.nonNull(databaseError)) {
+                    System.out.println("Transaction failed with " + databaseError.getMessage());
+                } else {
+                    dataSnapshot.getChildren().forEach(child -> fileNames.add(child.getValue().toString()));
+                    futureFileNames.complete(fileNames);
+                }
+            }
+        });
+
+        return futureFileNames.get();
     }
 }
